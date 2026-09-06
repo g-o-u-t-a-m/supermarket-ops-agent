@@ -154,7 +154,7 @@ async function runOpenAIAgent(
 
                 tool_choice: "auto",
 
-                max_tokens: 1000
+                max_tokens: 100
 
             });
 
