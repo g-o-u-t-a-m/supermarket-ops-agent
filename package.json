@@ -1,0 +1,27 @@
+{
+  "name": "supermarket-ops-agent",
+  "version": "1.0.0",
+  "description": "Conversational AI agent for running an Indian kirana store",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/telegram.js",
+    "dev": "nodemon src/index.js"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^2.0.0",
+    "@anthropic-ai/claude-agent-sdk": "^0.3.260",
+    "@google/genai": "^2.21.0",
+    "ai": "^5.0.0",
+    "better-sqlite3": "^12.0.0",
+    "dotenv": "^17.4.2",
+    "grammy": "^1.38.0",
+    "node-telegram-bot-api": "^0.66.0",
+    "openai": "^6.49.0",
+    "pdfkit": "^0.17.2",
+    "pptxgenjs": "^4.0.1",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
