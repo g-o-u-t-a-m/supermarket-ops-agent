@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/telegram.js",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/telegram.js"
   },
   "dependencies": {
     "@ai-sdk/openai": "^2.0.0",
