@@ -100,8 +100,19 @@ async function runOpenAIAgent(
         previousMessages.length > 0
     ) {
 
+        const recentMessages =
+            previousMessages
+                .filter(m => m.role !== "system")
+                .slice(-6);
+
         messages = [
-            ...previousMessages,
+            {
+                role: "system",
+                content: SYSTEM_PROMPT
+            },
+
+            ...recentMessages,
+
             {
                 role: "user",
                 content: message
@@ -143,7 +154,7 @@ async function runOpenAIAgent(
     ) {
 
         console.log(
-            `\n[OPENROUTER] Round ${round + 1}`
+            `\n[LLM] Round ${round + 1}`
         );
 
 
@@ -244,7 +255,7 @@ async function runOpenAIAgent(
 
 
             console.log(
-                `\n[OPENROUTER TOOL] ${toolName}`
+                `\n[LLM TOOL] ${toolName}`
             );
 
 
@@ -311,7 +322,7 @@ async function runOpenAIAgent(
 
 
                 console.log(
-                    "[OPENROUTER RESULT]",
+                    "[LLM RESULT]",
                     JSON.stringify(result)
                 );
 
@@ -369,7 +380,7 @@ async function runOpenAIAgent(
             } catch (error) {
 
                 console.error(
-                    `[OPENROUTER TOOL ERROR] ${toolName}:`,
+                    `[LLM TOOL ERROR] ${toolName}:`,
                     error.message
                 );
 
