@@ -193,8 +193,8 @@ async function runOpenAIAgent(
             response =
                 await openRouterClient.chat.completions.create({
 
-                    model: "openai/gpt-4.1-mini",
-
+                    model: "openrouter/free",
+                    
                     messages,
 
                     tools: openRouterTools,
