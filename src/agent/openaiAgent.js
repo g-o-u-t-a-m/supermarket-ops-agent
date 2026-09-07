@@ -9,11 +9,15 @@ const toolsModule = require("./tools");
 // OPENROUTER CLIENT
 // ============================================================
 
-const client = new OpenAI({
+const openRouterClient = new OpenAI({
     apiKey: process.env.OPENROUTER_API_KEY,
     baseURL: "https://openrouter.ai/api/v1"
 });
 
+const groqClient = new OpenAI({
+    apiKey: process.env.GROQ_API_KEY,
+    baseURL: "https://api.groq.com/openai/v1"
+});
 
 // ============================================================
 // TOOL MAPPING
@@ -143,20 +147,53 @@ async function runOpenAIAgent(
         );
 
 
-        const response =
-            await client.chat.completions.create({
+        let response;
 
-                model: "openai/gpt-4.1-mini",
+        try {
 
-                messages,
+            console.log("[GROQ] Trying Groq...");
 
-                tools: openRouterTools,
+            response =
+                await groqClient.chat.completions.create({
 
-                tool_choice: "auto",
+                    model: "openai/gpt-oss-120b",
 
-                max_tokens: 500
+                    messages,
 
-            });
+                    tools: openRouterTools,
+
+                    tool_choice: "auto",
+
+                    max_tokens: 500
+
+                });
+
+        } catch (groqError) {
+
+            console.error(
+                "[GROQ ERROR]",
+                groqError.message
+            );
+
+            console.log(
+                "[OPENROUTER] Trying OpenRouter..."
+            );
+
+            response =
+                await openRouterClient.chat.completions.create({
+
+                    model: "openai/gpt-4.1-mini",
+
+                    messages,
+
+                    tools: openRouterTools,
+
+                    tool_choice: "auto",
+
+                    max_tokens: 500
+
+                });
+        }
 
 
         const assistantMessage =
