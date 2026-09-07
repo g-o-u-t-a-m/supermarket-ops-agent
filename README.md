@@ -15,7 +15,13 @@ The agent supports inventory management, multi-turn billing, GST invoices, payme
 ```text
 Telegram
     ↓
-LLM Agent (OpenRouter)
+LLM Agent
+    ↓
+Gemini (Primary)
+    ↓ if quota/error
+Groq (Fallback)
+    ↓ if error
+OpenRouter (Fallback)
     ↓
 Tool Calling
     ↓
@@ -30,6 +36,29 @@ The system uses **LLM-driven tool orchestration** instead of a regex-based inten
 
 The LLM receives the user's message and available tools, selects the required tool, observes the result, and continues until the task is complete.
 
+---
+## LLM Provider Strategy
+
+The agent uses a multi-provider fallback architecture to improve
+availability and reduce dependency on a single LLM provider.
+
+```text
+User Message
+     ↓
+Gemini
+     │
+     ├── Success → Continue
+     │
+     └── Error / Rate Limit
+              ↓
+            Groq
+              │
+              ├── Success → Continue
+              │
+              └── Error
+                    ↓
+                OpenRouter
+```
 ---
 
 ## Features
@@ -314,6 +343,8 @@ The agent follows important business rules:
 
 * Node.js
 * JavaScript
+* Google Gemini
+* Groq
 * OpenRouter
 * LLM Tool Calling
 * Telegram Bot API
@@ -395,8 +426,9 @@ Create a `.env` file:
 
 ```text
 TELEGRAM_BOT_TOKEN=your_telegram_bot_token
-OPENROUTER_API_KEY=your_openrouter_api_key
 GEMINI_API_KEY=your_gemini_api_key
+GROQ_API_KEY=your_groq_api_key
+OPENROUTER_API_KEY=your_openrouter_api_key
 ```
 
 Do not commit the `.env` file.
@@ -474,9 +506,14 @@ Environment variables are configured in the deployment environment and are not c
 
 ### LLM-First Orchestration
 
-The system does not use a regex-based intent router.
+The agent uses LLM-driven tool orchestration instead of a regex-based intent router.
 
-The LLM determines which operation is required and calls the appropriate tool.
+Gemini is used as the primary LLM provider. If Gemini is unavailable
+or rate-limited, the agent falls back to Groq and then OpenRouter.
+
+The selected LLM receives the user's message and available tools,
+selects the required tool, observes the result, and continues until
+the task is complete.
 
 ### Tool-Based Database Access
 
